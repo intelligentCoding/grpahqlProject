@@ -22,24 +22,28 @@ export class PostResolver {
     @Arg("title", { nullable: true }) title: string,
     @Ctx() { em }: Mycontext
   ): Promise<Post | null> {
-      const post = await em.findOne(Post, {id});
-      if(!post) {
-        return null;
-      }
-      if(typeof title !== 'undefined') {
-          post.title = title;
-          await em.persistAndFlush(post);
-      }
-      return post;
+    const post = await em.findOne(Post, { id });
+    if (!post) {
+      return null;
+    }
+    if (typeof title !== "undefined") {
+      post.title = title;
+      await em.persistAndFlush(post);
+    }
+    return post;
   }
 
-  @Mutation(() => Post)
+  @Mutation(() => Boolean)
   async deletePost(
     @Arg("id") id: number,
-    @Arg("title", { nullable: true }) title: string,
     @Ctx() { em }: Mycontext
-  ): Promise<Post | null> {
-
+  ): Promise<Boolean> {
+    try {
+      await em.nativeDelete(Post, { id });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   @Mutation(() => Post)
