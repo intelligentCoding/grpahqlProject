@@ -87,8 +87,22 @@ let UserResolver = class UserResolver {
             createdAt: new Date(),
             updatedAt: new Date(),
         });
-        await em.persistAndFlush(user);
-        return user;
+        try {
+            await em.persistAndFlush(user);
+        }
+        catch (error) {
+            if (error.code === "23505" || error.detail.includes("already exists")) {
+                return {
+                    errors: [
+                        {
+                            field: "username",
+                            message: "username already exist",
+                        },
+                    ],
+                };
+            }
+        }
+        return { user };
     }
     async login(options, { em }) {
         const user = await em.findOne(User_1.User, {
@@ -132,7 +146,7 @@ let UserResolver = class UserResolver {
     }
 };
 __decorate([
-    (0, type_graphql_1.Mutation)(() => User_1.User),
+    (0, type_graphql_1.Mutation)(() => UserResponse),
     __param(0, (0, type_graphql_1.Arg)("options", () => UserNamePasswordInput)),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
