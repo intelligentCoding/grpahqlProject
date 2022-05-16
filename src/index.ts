@@ -4,11 +4,10 @@ import { Post } from "./entities/Post";
 import microConfig from './mikro-orm.config';
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
-
+  //automatically run migrations before anything else
+  await orm.getMigrator().up();
   const post = orm.em.create(Post, {
-    title: "My Title",
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    title: "My Title"
   });
   orm.em.persistAndFlush(post);
 };
