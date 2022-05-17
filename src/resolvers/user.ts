@@ -8,8 +8,16 @@ import {
   InputType,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
 } from "type-graphql";
+
+declare module "express-session" {
+  export interface SessionData {
+    userId: number;
+  }
+}
+
 @InputType()
 class UserNamePasswordInput {
   @Field()
@@ -35,6 +43,15 @@ class UserResponse {
 }
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: Mycontext) {
+    if (!req.session.userId) {
+      return null;
+    }
+    const user = await em.findOne(User, { id: req.session.userId });
+    return user;
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg("options", () => UserNamePasswordInput) options: UserNamePasswordInput,
@@ -84,12 +101,12 @@ export class UserResolver {
         };
       }
     }
-    return {user};
+    return { user };
   }
   @Mutation(() => UserResponse)
   async login(
     @Arg("options") options: UserNamePasswordInput,
-    @Ctx() { em }: Mycontext
+    @Ctx() { em, req }: Mycontext
   ): Promise<UserResponse> {
     const user = await em.findOne(User, {
       username: options.username.toLowerCase(),
@@ -126,7 +143,7 @@ export class UserResolver {
         ],
       };
     }
-
+    req.session!.userId = user.id;
     return {
       user,
     };
