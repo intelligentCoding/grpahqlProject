@@ -4,30 +4,20 @@ import { Box, Button, FormControl, FormErrorMessage, FormLabel } from '@chakra-u
 import { PageWrapper } from "../components/PageWrapper"
 import { CustomInput } from '../components/Input';
 import { useMutation } from 'urql';
+import { useRegisterMutation } from '../generated/graphql';
 interface registerProps {
 
 }
 
-const MUTATION_REGISTER = `mutation Register($username: String!, $password:String!){
-    register(options: {username: $username, password: $password}) {
-      errors {
-        message
-      }
-      user {
-        createdAt
-        id
-        updatedAt
-        username
-      }
-    }
-  }`;
-
 export const Register: React.FC<registerProps> = ({}) => {
-    const [, register] = useMutation(MUTATION_REGISTER)
+    const [, register] = useRegisterMutation()
     return (
         <PageWrapper>
-            <Formik initialValues={{username: "", password: ""}} onSubmit={ async (values) => {
+            <Formik initialValues={{username: "", password: ""}} onSubmit={ async (values, {setErrors}) => {
                 const response = await register(values);
+                if(response.data?.register?.errors) {
+
+                }
             }}>
                 {({isSubmitting}) => (
                     <Form>
