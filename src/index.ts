@@ -14,10 +14,7 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import { Mycontext } from "./types";
 import Redis from "ioredis";
-// import cors from "cors";
-
-
-// import { createClient } from "redis";
+import cors from "cors";
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
@@ -30,12 +27,20 @@ const main = async () => {
   // const redisClient = redis.createClient();
   const redis = new Redis("127.0.0.1:6379");
   app.set("trust proxy", 1);
+
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+
   app.use(
     session({
       name: "tid",
-      store: new RedisStore({ 
-        client: redis, 
-        disableTouch: true 
+      store: new RedisStore({
+        client: redis,
+        disableTouch: true,
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
@@ -48,6 +53,7 @@ const main = async () => {
       resave: false,
     })
   );
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [HelloResolver, PostResolver, UserResolver],
@@ -57,7 +63,10 @@ const main = async () => {
   });
   await apolloServer.start();
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({
+    app,
+    cors: false,
+  });
   app.listen(4000, () => {
     console.log("server started on localhost:4000");
   });
