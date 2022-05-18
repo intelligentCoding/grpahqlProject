@@ -5,7 +5,7 @@ import { Provider, createClient } from 'urql';
 
 function MyApp({ Component, pageProps }: any) {
   const client = createClient({
-    url: 'http://localhost:4000/graphql',
+    url: 'http://localhost:4000/graphql'
   });
 
   return (

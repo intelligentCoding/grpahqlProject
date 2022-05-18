@@ -5,6 +5,7 @@ import { PageWrapper } from "../components/PageWrapper"
 import { CustomInput } from '../components/Input';
 import { useMutation } from 'urql';
 import { useRegisterMutation } from '../generated/graphql';
+import { errorMap } from '../utils';
 interface registerProps {
 
 }
@@ -16,7 +17,7 @@ export const Register: React.FC<registerProps> = ({}) => {
             <Formik initialValues={{username: "", password: ""}} onSubmit={ async (values, {setErrors}) => {
                 const response = await register(values);
                 if(response.data?.register?.errors) {
-
+                    setErrors(errorMap(response.data.register.errors))
                 }
             }}>
                 {({isSubmitting}) => (

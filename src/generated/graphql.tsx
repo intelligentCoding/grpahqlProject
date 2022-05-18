@@ -105,7 +105,7 @@ export type RegisterMutation = (
     { __typename?: 'UserResponse' }
     & { errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
-      & Pick<FieldError, 'message'>
+      & Pick<FieldError, 'field' | 'message'>
     )>>, user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'createdAt' | 'id' | 'updatedAt' | 'username'>
@@ -118,6 +118,7 @@ export const RegisterDocument = gql`
     mutation Register($username: String!, $password: String!) {
   register(options: {username: $username, password: $password}) {
     errors {
+      field
       message
     }
     user {
