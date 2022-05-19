@@ -59,7 +59,7 @@ UserResponse = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], UserResponse);
 let UserResolver = class UserResolver {
-    async me({ req, em }) {
+    async findUser({ req, em }) {
         if (!req.session.userId) {
             return null;
         }
@@ -160,7 +160,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], UserResolver.prototype, "me", null);
+], UserResolver.prototype, "findUser", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => UserResponse),
     __param(0, (0, type_graphql_1.Arg)("options", () => UserNamePasswordInput)),

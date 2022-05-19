@@ -43,8 +43,10 @@ class UserResponse {
 }
 @Resolver()
 export class UserResolver {
+
+  //Find user
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { req, em }: Mycontext) {
+  async findUser(@Ctx() { req, em }: Mycontext) {
     if (!req.session.userId) {
       return null;
     }
@@ -52,6 +54,7 @@ export class UserResolver {
     return user;
   }
 
+  //Register
   @Mutation(() => UserResponse)
   async register(
     @Arg("options", () => UserNamePasswordInput) options: UserNamePasswordInput,
@@ -105,6 +108,8 @@ export class UserResolver {
 
     return { user };
   }
+
+  //Login
   @Mutation(() => UserResponse)
   async login(
     @Arg("options") options: UserNamePasswordInput,
