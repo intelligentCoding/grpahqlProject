@@ -1,11 +1,12 @@
-import { Box, Flex, Link } from "@chakra-ui/core"
+import { Box, Button, Flex, Link } from "@chakra-ui/core"
 import NextLink from "next/link";
-import { useFindUserQuery } from '../generated/graphql';
+import { useFindUserQuery, useLogoutMutation } from '../generated/graphql';
 interface NavBarProps {
 
 }
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
+    const [ {fetching: logoutFetching}, logout] = useLogoutMutation();
     const [{data, fetching}] = useFindUserQuery();
     let navBody = null;
 
@@ -22,7 +23,12 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             </>
         )
     } else {
-        navBody = <Box color="#FEEBC8">Welcome to Donations.ca {data.findUser.username}</Box>
+        navBody = (
+            <Flex>
+                <Box color="#FEEBC8">Welcome to Donations.ca {data.findUser.username}</Box>
+                <Button isLoading={logoutFetching} onClick={() => {logout();}} variant="link">logout</Button>
+            </Flex>
+        )
     }
 
     return (
