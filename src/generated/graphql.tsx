@@ -66,7 +66,7 @@ export type Query = {
   hello: Scalars['String'];
   posts: Array<Post>;
   post?: Maybe<Post>;
-  me?: Maybe<User>;
+  findUser?: Maybe<User>;
 };
 
 
@@ -92,6 +92,17 @@ export type UserResponse = {
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
 };
+
+export type FindUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindUserQuery = (
+  { __typename?: 'Query' }
+  & { findUser?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
+  )> }
+);
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -134,6 +145,18 @@ export type RegisterMutation = (
 );
 
 
+export const FindUserDocument = gql`
+    query FindUser {
+  findUser {
+    id
+    username
+  }
+}
+    `;
+
+export function useFindUserQuery(options: Omit<Urql.UseQueryArgs<FindUserQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<FindUserQuery>({ query: FindUserDocument, ...options });
+};
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(options: {username: $username, password: $password}) {
