@@ -154,8 +154,8 @@ let UserResolver = class UserResolver {
         };
     }
     logout({ req, res }) {
-        new Promise(resolve => req.session.destroy(err => {
-            res.clearCookie('qid');
+        return new Promise((resolve) => req.session.destroy(err => {
+            res.clearCookie('tid');
             if (err) {
                 console.log(err);
                 resolve(false);
