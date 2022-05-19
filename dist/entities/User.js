@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const core_1 = require("@mikro-orm/core");
 const type_graphql_1 = require("type-graphql");
+const Donation_1 = require("./Donation");
 let User = class User {
     constructor() {
         this.createdAt = new Date();
@@ -48,6 +49,11 @@ __decorate([
     (0, core_1.Property)({ type: "text" }),
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => [Donation_1.Donation], { nullable: true }),
+    (0, core_1.OneToMany)(() => Donation_1.Donation, donation => donation.donator),
+    __metadata("design:type", Array)
+], User.prototype, "donations", void 0);
 __decorate([
     (0, core_1.Property)({ type: "text" }),
     __metadata("design:type", String)

@@ -1,5 +1,6 @@
-import { Entity, Property, PrimaryKey } from "@mikro-orm/core";
+import { Entity, Property, PrimaryKey, ManyToOne, OneToMany } from "@mikro-orm/core";
 import { Field, ObjectType } from "type-graphql";
+import { Donation } from "./Donation";
 
 @ObjectType()
 @Entity()
@@ -27,6 +28,10 @@ export class User {
   @Field()
   @Property({ type: "text"})
   lastName!: string;
+
+  @Field(() => [Donation], { nullable: true })
+  @OneToMany(() => Donation, donation => donation.donator)
+  donations: Donation[];
 
   @Property({type: "text"})
   password!: string;
