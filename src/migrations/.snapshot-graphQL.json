@@ -44,6 +44,24 @@
           "nullable": false,
           "mappedType": "text"
         },
+        "first_name": {
+          "name": "first_name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
         "password": {
           "name": "password",
           "type": "text",
@@ -100,31 +118,30 @@
           "length": 6,
           "mappedType": "datetime"
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(0)",
+        "donation": {
+          "name": "donation",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
+          "mappedType": "integer"
         },
-        "title": {
-          "name": "title",
-          "type": "text",
+        "tip": {
+          "name": "tip",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "integer"
         }
       },
-      "name": "post",
+      "name": "donation",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "post_pkey",
+          "keyName": "donation_pkey",
           "columnNames": [
             "id"
           ],

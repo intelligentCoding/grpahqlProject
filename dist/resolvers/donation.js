@@ -19,34 +19,25 @@ let PostResolver = class PostResolver {
     posts({ em }) {
         return em.find(Donation_1.Donation, {});
     }
-    post(id, { em }) {
+    donations(id, { em }) {
         return em.findOne(Donation_1.Donation, { id });
     }
-    async updatePost(id, title, { em }) {
-        const post = await em.findOne(Donation_1.Donation, { id });
-        if (!post) {
+    async updateDonation(id, donation, { em }) {
+        const userDonation = await em.findOne(Donation_1.Donation, { id });
+        if (!userDonation) {
             return null;
         }
-        if (typeof title !== "undefined") {
-            post.title = title;
-            await em.persistAndFlush(post);
+        if (typeof donation !== "undefined") {
+            userDonation.donation = donation;
+            await em.persistAndFlush(userDonation);
         }
-        return post;
+        return userDonation;
     }
-    async deletePost(id, { em }) {
-        try {
-            await em.nativeDelete(Donation_1.Donation, { id });
-            return true;
-        }
-        catch (error) {
-            return false;
-        }
-    }
-    async createPost(title, { em }) {
+    async makeDonation(donation, tip, { em }) {
         const post = em.create(Donation_1.Donation, {
-            title,
+            tip,
+            donation,
             createdAt: new Date(),
-            updatedAt: new Date(),
         });
         await em.persistAndFlush(post);
         return post;
@@ -66,34 +57,27 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
-], PostResolver.prototype, "post", null);
+], PostResolver.prototype, "donations", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Donation_1.Donation),
     __param(0, (0, type_graphql_1.Arg)("id")),
-    __param(1, (0, type_graphql_1.Arg)("title", { nullable: true })),
+    __param(1, (0, type_graphql_1.Arg)("donation", { nullable: true })),
     __param(2, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String, Object]),
+    __metadata("design:paramtypes", [Number, Number, Object]),
     __metadata("design:returntype", Promise)
-], PostResolver.prototype, "updatePost", null);
-__decorate([
-    (0, type_graphql_1.Mutation)(() => Boolean),
-    __param(0, (0, type_graphql_1.Arg)("id")),
-    __param(1, (0, type_graphql_1.Ctx)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
-    __metadata("design:returntype", Promise)
-], PostResolver.prototype, "deletePost", null);
+], PostResolver.prototype, "updateDonation", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Donation_1.Donation),
-    __param(0, (0, type_graphql_1.Arg)("title")),
-    __param(1, (0, type_graphql_1.Ctx)()),
+    __param(0, (0, type_graphql_1.Arg)("donation")),
+    __param(1, (0, type_graphql_1.Arg)("tip")),
+    __param(2, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Number, Number, Object]),
     __metadata("design:returntype", Promise)
-], PostResolver.prototype, "createPost", null);
+], PostResolver.prototype, "makeDonation", null);
 PostResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], PostResolver);
 exports.PostResolver = PostResolver;
-//# sourceMappingURL=post.js.map
+//# sourceMappingURL=donation.js.map

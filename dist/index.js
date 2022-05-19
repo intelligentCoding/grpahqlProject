@@ -10,7 +10,7 @@ const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
 const hello_1 = require("./resolvers/hello");
-const post_1 = require("./resolvers/post");
+const donation_1 = require("./resolvers/donation");
 const User_1 = require("./resolvers/User");
 const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
@@ -45,7 +45,7 @@ const main = async () => {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: await (0, type_graphql_1.buildSchema)({
-            resolvers: [hello_1.HelloResolver, post_1.PostResolver, User_1.UserResolver],
+            resolvers: [hello_1.HelloResolver, donation_1.PostResolver, User_1.UserResolver],
             validate: false,
         }),
         context: ({ req, res }) => ({ em: orm.em, req, res }),

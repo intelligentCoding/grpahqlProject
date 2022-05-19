@@ -9,52 +9,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Donation = void 0;
 const core_1 = require("@mikro-orm/core");
 const type_graphql_1 = require("type-graphql");
-let User = class User {
+let Donation = class Donation {
     constructor() {
         this.createdAt = new Date();
-        this.updatedAt = new Date();
     }
 };
 __decorate([
     (0, type_graphql_1.Field)(),
     (0, core_1.PrimaryKey)(),
     __metadata("design:type", Number)
-], User.prototype, "id", void 0);
+], Donation.prototype, "id", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => String),
     (0, core_1.Property)({ type: "date" }),
     __metadata("design:type", Object)
-], User.prototype, "createdAt", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String),
-    (0, core_1.Property)({ type: "date", onUpdate: () => new Date() }),
-    __metadata("design:type", Object)
-], User.prototype, "updatedAt", void 0);
+], Donation.prototype, "createdAt", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
-    (0, core_1.Property)({ type: "text", unique: true }),
-    __metadata("design:type", String)
-], User.prototype, "username", void 0);
+    (0, core_1.Property)(),
+    __metadata("design:type", Number)
+], Donation.prototype, "donation", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
-    (0, core_1.Property)({ type: "text" }),
-    __metadata("design:type", String)
-], User.prototype, "firstName", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    (0, core_1.Property)({ type: "text" }),
-    __metadata("design:type", String)
-], User.prototype, "lastName", void 0);
-__decorate([
-    (0, core_1.Property)({ type: "text" }),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-User = __decorate([
+    (0, core_1.Property)(),
+    __metadata("design:type", Number)
+], Donation.prototype, "tip", void 0);
+Donation = __decorate([
     (0, type_graphql_1.ObjectType)(),
     (0, core_1.Entity)()
-], User);
-exports.User = User;
-//# sourceMappingURL=User.js.map
+], Donation);
+exports.Donation = Donation;
+//# sourceMappingURL=Donation.js.map
