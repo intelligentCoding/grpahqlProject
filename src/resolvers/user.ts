@@ -55,7 +55,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg("options", () => UserNamePasswordInput) options: UserNamePasswordInput,
-    @Ctx() { em }: Mycontext
+    @Ctx() { req, em }: Mycontext
   ): Promise<UserResponse> {
     // validate username
     if (options.username.length <= 2) {
@@ -63,7 +63,7 @@ export class UserResolver {
         errors: [
           {
             field: "username",
-            message: "very short user name",
+            message: "very short user name.",
           },
         ],
       };
@@ -90,7 +90,7 @@ export class UserResolver {
     try {
       await em.persistAndFlush(user);
     } catch (error) {
-      if (error.code === "23505" || error.detail.includes("already exists")) {
+      if (error.detail.includes("already exists")) {
         return {
           errors: [
             {
@@ -101,6 +101,8 @@ export class UserResolver {
         };
       }
     }
+    req.session.userId = user.id;
+
     return { user };
   }
   @Mutation(() => UserResponse)

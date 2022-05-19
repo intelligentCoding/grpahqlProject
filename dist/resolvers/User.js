@@ -66,13 +66,13 @@ let UserResolver = class UserResolver {
         const user = await em.findOne(User_1.User, { id: req.session.userId });
         return user;
     }
-    async register(options, { em }) {
+    async register(options, { req, em }) {
         if (options.username.length <= 2) {
             return {
                 errors: [
                     {
                         field: "username",
-                        message: "very short user name",
+                        message: "very short user name.",
                     },
                 ],
             };
@@ -98,7 +98,7 @@ let UserResolver = class UserResolver {
             await em.persistAndFlush(user);
         }
         catch (error) {
-            if (error.code === "23505" || error.detail.includes("already exists")) {
+            if (error.detail.includes("already exists")) {
                 return {
                     errors: [
                         {
@@ -109,6 +109,7 @@ let UserResolver = class UserResolver {
                 };
             }
         }
+        req.session.userId = user.id;
         return { user };
     }
     async login(options, { em, req }) {

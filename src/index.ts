@@ -9,7 +9,7 @@ import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/User";
-import redis from "redis";
+// import redis from "redis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { Mycontext } from "./types";
