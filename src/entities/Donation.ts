@@ -14,7 +14,7 @@ export class Donation {
   createdAt = new Date();
 
   @Field()
-  creatorId: number;
+  creatorId!: number;
 
   @Field(() => User)
   @ManyToOne()
