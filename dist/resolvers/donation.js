@@ -45,8 +45,12 @@ let DonationResolver = class DonationResolver {
         }
         return donationByUser;
     }
-    async createDonation(options, { req }) {
-        return Donation_1.Donation.create(Object.assign(Object.assign({}, options), { creatorId: req.session.userId })).save();
+    async createDonation(tip, donation, { req }) {
+        return Donation_1.Donation.create({
+            tip,
+            donation,
+            creatorId: req.session.userId,
+        }).save();
     }
     async deleteDonation(id) {
         await Donation_1.Donation.delete(id);
@@ -77,10 +81,11 @@ __decorate([
 __decorate([
     (0, type_graphql_1.Mutation)(() => Donation_1.Donation),
     (0, type_graphql_1.UseMiddleware)(auth_1.auth),
-    __param(0, (0, type_graphql_1.Arg)("options", () => DonationInput)),
-    __param(1, (0, type_graphql_1.Ctx)()),
+    __param(0, (0, type_graphql_1.Arg)("tip", () => type_graphql_1.Int)),
+    __param(1, (0, type_graphql_1.Arg)("donation", () => type_graphql_1.Int)),
+    __param(2, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [DonationInput, Object]),
+    __metadata("design:paramtypes", [Number, Number, Object]),
     __metadata("design:returntype", Promise)
 ], DonationResolver.prototype, "createDonation", null);
 __decorate([
