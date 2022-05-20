@@ -74,7 +74,7 @@ export type Query = {
   hello: Scalars['String'];
   donations: Array<Donation>;
   donationById?: Maybe<Donation>;
-  findUser?: Maybe<User>;
+  user?: Maybe<User>;
 };
 
 
@@ -116,17 +116,6 @@ export type CreateDonationMutation = (
     { __typename?: 'Donation' }
     & Pick<Donation, 'donation'>
   ) }
-);
-
-export type FindUserQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type FindUserQuery = (
-  { __typename?: 'Query' }
-  & { findUser?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
-  )> }
 );
 
 export type LoginMutationVariables = Exact<{
@@ -179,6 +168,17 @@ export type RegisterMutation = (
   ) }
 );
 
+export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
+  )> }
+);
+
 
 export const CreateDonationDocument = gql`
     mutation CreateDonation($tip: Int!, $donation: Int!) {
@@ -190,18 +190,6 @@ export const CreateDonationDocument = gql`
 
 export function useCreateDonationMutation() {
   return Urql.useMutation<CreateDonationMutation, CreateDonationMutationVariables>(CreateDonationDocument);
-};
-export const FindUserDocument = gql`
-    query FindUser {
-  findUser {
-    id
-    username
-  }
-}
-    `;
-
-export function useFindUserQuery(options: Omit<Urql.UseQueryArgs<FindUserQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<FindUserQuery>({ query: FindUserDocument, ...options });
 };
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
@@ -251,4 +239,16 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const UserDocument = gql`
+    query User {
+  user {
+    id
+    username
+  }
+}
+    `;
+
+export function useUserQuery(options: Omit<Urql.UseQueryArgs<UserQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<UserQuery>({ query: UserDocument, ...options });
 };
