@@ -2,14 +2,14 @@ import { Donation } from "../entities/Donation";
 import { Mycontext } from "src/types";
 import { Arg, Ctx, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { auth } from "../auth";
-import { Connection, getConnection } from "typeorm";
+import { getConnection } from "typeorm";
 
 
 @Resolver()
 export class DonationResolver {
   @Query(() => [Donation])
   async donations(
-    @Arg('limit') limit: number,
+    @Arg('limit', () => Int) limit: number,
     @Arg('cursor', () => String, { nullable: true}) cursor: string | null,
   ): Promise<Donation[]> {
     const customLimit = Math.min(25, limit);

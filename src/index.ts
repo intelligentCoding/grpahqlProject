@@ -15,7 +15,7 @@ import Redis from "ioredis";
 import cors from "cors";
 import { createConnection } from 'typeorm'
 import { User } from "./entities/User";
-
+import path from "path";
 const main = async () => {
   const conn = await createConnection({
     type: 'postgres',
@@ -24,9 +24,10 @@ const main = async () => {
     password: "kasjee",
     logging: true,
     synchronize: true,
-    entities: [User, Donation]
+    entities: [User, Donation],
+    migrations: [path.join(__dirname, "./migrations/*")]
   })
-
+  await conn.runMigrations();
   const app = express();
   //run session middleware before apollo
   const RedisStore = connectRedis(session);
@@ -57,6 +58,7 @@ const main = async () => {
       secret: "graphQLProject",
       saveUninitialized: false,
       resave: false,
+
     })
   );
 

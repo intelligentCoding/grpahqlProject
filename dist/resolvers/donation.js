@@ -58,7 +58,7 @@ let DonationResolver = class DonationResolver {
 };
 __decorate([
     (0, type_graphql_1.Query)(() => [Donation_1.Donation]),
-    __param(0, (0, type_graphql_1.Arg)('limit')),
+    __param(0, (0, type_graphql_1.Arg)('limit', () => type_graphql_1.Int)),
     __param(1, (0, type_graphql_1.Arg)('cursor', () => String, { nullable: true })),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),
