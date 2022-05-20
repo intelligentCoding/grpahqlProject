@@ -1,6 +1,6 @@
 import { Donation } from "../entities/Donation";
 import { Mycontext } from "src/types";
-import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { auth } from "../auth";
 
 @InputType()
@@ -41,11 +41,13 @@ export class DonationResolver {
   @Mutation(() => Donation)
   @UseMiddleware(auth)
   async createDonation(
-    @Arg("options", () => DonationInput) options: DonationInput,
+    @Arg("tip", () => Int) tip: number,
+    @Arg("donation", () => Int) donation: number,
     @Ctx() { req }: Mycontext
   ): Promise<Donation> {
     return Donation.create({
-      ...options,
+      tip,
+      donation,
       creatorId: req.session.userId,
     }).save();
   }

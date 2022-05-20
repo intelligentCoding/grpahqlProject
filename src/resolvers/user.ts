@@ -55,7 +55,7 @@ export class UserResolver {
 
   //Find user
   @Query(() => User, { nullable: true })
-  async findUser(@Ctx() { req }: Mycontext) {
+  async user(@Ctx() { req }: Mycontext) {
     if (!req.session.userId) {
       return null;
     }
