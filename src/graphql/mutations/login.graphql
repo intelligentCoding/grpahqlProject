@@ -7,7 +7,6 @@ mutation Login($username: String!, $password: String!) {
     user {
       createdAt
       id
-      updatedAt
       username
     }
   }

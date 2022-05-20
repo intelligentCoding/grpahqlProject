@@ -12,80 +12,90 @@ export type Scalars = {
   Float: number;
 };
 
+export type Donation = {
+  __typename?: 'Donation';
+  id: Scalars['Float'];
+  createdAt: Scalars['String'];
+  donation: Scalars['Float'];
+  tip: Scalars['Float'];
+  creatorId: Scalars['Float'];
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
   message: Scalars['String'];
 };
 
+export type LoginInput = {
+  username: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  updatePost: Post;
-  deletePost: Scalars['Boolean'];
-  createPost: Post;
+  updateDonation: Donation;
+  createDonation: Donation;
+  deleteDonation: Scalars['Boolean'];
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
 };
 
 
-export type MutationUpdatePostArgs = {
-  title?: Maybe<Scalars['String']>;
+export type MutationUpdateDonationArgs = {
+  donation?: Maybe<Scalars['Float']>;
   id: Scalars['Float'];
 };
 
 
-export type MutationDeletePostArgs = {
-  id: Scalars['Float'];
+export type MutationCreateDonationArgs = {
+  donation: Scalars['Int'];
+  tip: Scalars['Int'];
 };
 
 
-export type MutationCreatePostArgs = {
-  title: Scalars['String'];
+export type MutationDeleteDonationArgs = {
+  id: Scalars['Float'];
 };
 
 
 export type MutationRegisterArgs = {
-  options: UserNamePasswordInput;
+  options: RegisterInput;
 };
 
 
 export type MutationLoginArgs = {
-  options: UserNamePasswordInput;
-};
-
-export type Post = {
-  __typename?: 'Post';
-  id: Scalars['Float'];
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
-  title: Scalars['String'];
+  options: LoginInput;
 };
 
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
-  posts: Array<Post>;
-  post?: Maybe<Post>;
+  donations: Array<Donation>;
+  donationById?: Maybe<Donation>;
   findUser?: Maybe<User>;
 };
 
 
-export type QueryPostArgs = {
-  id: Scalars['Int'];
+export type QueryDonationByIdArgs = {
+  id: Scalars['Float'];
+};
+
+export type RegisterInput = {
+  username: Scalars['String'];
+  password: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
   id: Scalars['Float'];
   createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
   username: Scalars['String'];
-};
-
-export type UserNamePasswordInput = {
-  username: Scalars['String'];
-  password: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -93,6 +103,20 @@ export type UserResponse = {
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
 };
+
+export type CreateDonationMutationVariables = Exact<{
+  tip: Scalars['Int'];
+  donation: Scalars['Int'];
+}>;
+
+
+export type CreateDonationMutation = (
+  { __typename?: 'Mutation' }
+  & { createDonation: (
+    { __typename?: 'Donation' }
+    & Pick<Donation, 'donation'>
+  ) }
+);
 
 export type FindUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -120,7 +144,7 @@ export type LoginMutation = (
       & Pick<FieldError, 'field' | 'message'>
     )>>, user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'createdAt' | 'id' | 'updatedAt' | 'username'>
+      & Pick<User, 'createdAt' | 'id' | 'username'>
     )> }
   ) }
 );
@@ -134,6 +158,8 @@ export type LogoutMutation = (
 );
 
 export type RegisterMutationVariables = Exact<{
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
   username: Scalars['String'];
   password: Scalars['String'];
 }>;
@@ -148,12 +174,23 @@ export type RegisterMutation = (
       & Pick<FieldError, 'field' | 'message'>
     )>>, user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'createdAt' | 'id' | 'updatedAt' | 'username'>
+      & Pick<User, 'createdAt' | 'id' | 'username'>
     )> }
   ) }
 );
 
 
+export const CreateDonationDocument = gql`
+    mutation CreateDonation($tip: Int!, $donation: Int!) {
+  createDonation(tip: $tip, donation: $donation) {
+    donation
+  }
+}
+    `;
+
+export function useCreateDonationMutation() {
+  return Urql.useMutation<CreateDonationMutation, CreateDonationMutationVariables>(CreateDonationDocument);
+};
 export const FindUserDocument = gql`
     query FindUser {
   findUser {
@@ -176,7 +213,6 @@ export const LoginDocument = gql`
     user {
       createdAt
       id
-      updatedAt
       username
     }
   }
@@ -196,8 +232,10 @@ export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!) {
-  register(options: {username: $username, password: $password}) {
+    mutation Register($firstName: String!, $lastName: String!, $username: String!, $password: String!) {
+  register(
+    options: {firstName: $firstName, lastName: $lastName, username: $username, password: $password}
+  ) {
     errors {
       field
       message
@@ -205,7 +243,6 @@ export const RegisterDocument = gql`
     user {
       createdAt
       id
-      updatedAt
       username
     }
   }

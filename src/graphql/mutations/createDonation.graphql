@@ -1,0 +1,6 @@
+mutation CreateDonation($tip: Int!, $donation: Int!){
+    createDonation(tip: $tip, donation: $donation){
+        donation
+    }
+
+}
