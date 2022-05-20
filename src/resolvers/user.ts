@@ -11,6 +11,7 @@ import {
   Query,
   Resolver,
 } from "type-graphql";
+import { getConnection } from "typeorm";
 
 declare module "express-session" {
   export interface SessionData {
@@ -19,11 +20,19 @@ declare module "express-session" {
 }
 
 @InputType()
-class UserNamePasswordInput {
+class LoginInput {
   @Field()
   username: string;
   @Field()
   password: string;
+}
+
+@InputType()
+class RegisterInput extends LoginInput {
+  @Field()
+  firstName: string;
+  @Field()
+  lastName: string;
 }
 
 @ObjectType()
@@ -46,19 +55,18 @@ export class UserResolver {
 
   //Find user
   @Query(() => User, { nullable: true })
-  async findUser(@Ctx() { req, em }: Mycontext) {
+  async findUser(@Ctx() { req }: Mycontext) {
     if (!req.session.userId) {
       return null;
     }
-    const user = await em.findOne(User, { id: req.session.userId });
-    return user;
+    return User.findOne(req.session.userId);
   }
 
   //Register
   @Mutation(() => UserResponse)
   async register(
-    @Arg("options", () => UserNamePasswordInput) options: UserNamePasswordInput,
-    @Ctx() { req, em }: Mycontext
+    @Arg("options", () => RegisterInput) options: RegisterInput,
+    @Ctx() { req }: Mycontext
   ): Promise<UserResponse> {
     // validate username
     if (options.username.length <= 2) {
@@ -84,14 +92,16 @@ export class UserResolver {
       };
     }
     const hashedPassword = await argon2.hash(options.password);
-    const user = em.create(User, {
-      username: options.username,
-      password: hashedPassword,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    let user;
     try {
-      await em.persistAndFlush(user);
+      const results = await getConnection().createQueryBuilder().insert().into(User).values({
+        firstName: options.firstName,
+        lastName: options.lastName,
+        username: options.username,
+        password: hashedPassword,
+      }
+      ).returning('*').execute();
+      user = results.raw[0];
     } catch (error) {
       if (error.detail.includes("already exists")) {
         return {
@@ -112,12 +122,10 @@ export class UserResolver {
   //Login
   @Mutation(() => UserResponse)
   async login(
-    @Arg("options") options: UserNamePasswordInput,
-    @Ctx() { em, req }: Mycontext
+    @Arg("options") options: LoginInput,
+    @Ctx() { req }: Mycontext
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, {
-      username: options.username.toLowerCase(),
-    });
+    const user = await User.findOne({where: {username: options.username}})
     if (!user) {
       return {
         errors: [

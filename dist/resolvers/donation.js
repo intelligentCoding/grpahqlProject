@@ -12,75 +12,86 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PostResolver = void 0;
+exports.DonationResolver = void 0;
 const Donation_1 = require("../entities/Donation");
 const type_graphql_1 = require("type-graphql");
-let PostResolver = class PostResolver {
-    donations({ em }) {
-        return em.find(Donation_1.Donation, {});
+const auth_1 = require("../auth");
+let DonationInput = class DonationInput {
+};
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", Number)
+], DonationInput.prototype, "tip", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", Number)
+], DonationInput.prototype, "donation", void 0);
+DonationInput = __decorate([
+    (0, type_graphql_1.InputType)()
+], DonationInput);
+let DonationResolver = class DonationResolver {
+    async donations() {
+        return Donation_1.Donation.find();
     }
-    donationById(id, { em }) {
-        return em.findOne(Donation_1.Donation, { id });
+    donationById(id) {
+        return Donation_1.Donation.findOne(id);
     }
-    async updateDonation(id, donation, { em }) {
-        const userDonation = await em.findOne(Donation_1.Donation, { id });
-        if (!userDonation) {
+    async updateDonation(id, donation) {
+        const donationByUser = await Donation_1.Donation.findOne(id);
+        if (!donationByUser)
             return null;
+        if (donation) {
+            await Donation_1.Donation.update({ id }, { donation });
         }
-        if (typeof donation !== "undefined") {
-            userDonation.donation = donation;
-            await em.persistAndFlush(userDonation);
-        }
-        return userDonation;
+        return donationByUser;
     }
-    async createDonation(donation, tip, { em, req }) {
-        const userId = req.session.userId ? req.session.userId : null;
-        const post = em.create(Donation_1.Donation, {
-            creatorId: userId,
-            tip,
-            donation,
-            donator: userId,
-            createdAt: new Date(),
-        });
-        await em.persistAndFlush(post);
-        return post;
+    async createDonation(options, { req }) {
+        return Donation_1.Donation.create(Object.assign(Object.assign({}, options), { creatorId: req.session.userId })).save();
+    }
+    async deleteDonation(id) {
+        await Donation_1.Donation.delete(id);
+        return true;
     }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => [Donation_1.Donation]),
-    __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], PostResolver.prototype, "donations", null);
+], DonationResolver.prototype, "donations", null);
 __decorate([
     (0, type_graphql_1.Query)(() => Donation_1.Donation, { nullable: true }),
-    __param(0, (0, type_graphql_1.Arg)("id", () => type_graphql_1.Int)),
-    __param(1, (0, type_graphql_1.Ctx)()),
+    __param(0, (0, type_graphql_1.Arg)("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], PostResolver.prototype, "donationById", null);
+], DonationResolver.prototype, "donationById", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Donation_1.Donation),
     __param(0, (0, type_graphql_1.Arg)("id")),
     __param(1, (0, type_graphql_1.Arg)("donation", { nullable: true })),
-    __param(2, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, Object]),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
-], PostResolver.prototype, "updateDonation", null);
+], DonationResolver.prototype, "updateDonation", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Donation_1.Donation),
-    __param(0, (0, type_graphql_1.Arg)("donation")),
-    __param(1, (0, type_graphql_1.Arg)("tip")),
-    __param(2, (0, type_graphql_1.Ctx)()),
+    (0, type_graphql_1.UseMiddleware)(auth_1.auth),
+    __param(0, (0, type_graphql_1.Arg)("options", () => DonationInput)),
+    __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, Object]),
+    __metadata("design:paramtypes", [DonationInput, Object]),
     __metadata("design:returntype", Promise)
-], PostResolver.prototype, "createDonation", null);
-PostResolver = __decorate([
+], DonationResolver.prototype, "createDonation", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, type_graphql_1.Arg)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], DonationResolver.prototype, "deleteDonation", null);
+DonationResolver = __decorate([
     (0, type_graphql_1.Resolver)()
-], PostResolver);
-exports.PostResolver = PostResolver;
+], DonationResolver);
+exports.DonationResolver = DonationResolver;
 //# sourceMappingURL=donation.js.map

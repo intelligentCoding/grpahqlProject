@@ -10,46 +10,43 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Donation = void 0;
-const core_1 = require("@mikro-orm/core");
 const type_graphql_1 = require("type-graphql");
+const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
-let Donation = class Donation {
-    constructor() {
-        this.createdAt = new Date();
-    }
+let Donation = class Donation extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, type_graphql_1.Field)(),
-    (0, core_1.PrimaryKey)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], Donation.prototype, "id", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => String),
-    (0, core_1.Property)({ type: "date" }),
-    __metadata("design:type", Object)
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
 ], Donation.prototype, "createdAt", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
-    __metadata("design:type", Number)
-], Donation.prototype, "creatorId", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => User_1.User),
-    (0, core_1.ManyToOne)(),
-    __metadata("design:type", User_1.User)
-], Donation.prototype, "donator", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    (0, core_1.Property)({ type: "int", default: 0 }),
+    (0, typeorm_1.Column)({ type: "int", default: 0 }),
     __metadata("design:type", Number)
 ], Donation.prototype, "donation", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
-    (0, core_1.Property)({ type: "int", default: 0 }),
+    (0, typeorm_1.Column)({ type: "int", default: 0 }),
     __metadata("design:type", Number)
 ], Donation.prototype, "tip", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Donation.prototype, "creatorId", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => User_1.User, user => user.donations),
+    __metadata("design:type", User_1.User)
+], Donation.prototype, "donator", void 0);
 Donation = __decorate([
     (0, type_graphql_1.ObjectType)(),
-    (0, core_1.Entity)()
+    (0, typeorm_1.Entity)()
 ], Donation);
 exports.Donation = Donation;
 //# sourceMappingURL=Donation.js.map

@@ -1,30 +1,31 @@
-import { Entity, Property, PrimaryKey, ManyToOne } from "@mikro-orm/core";
 import { Field, ObjectType } from "type-graphql";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
+
 
 @ObjectType()
 @Entity()
-export class Donation {
+export class Donation extends BaseEntity {
   @Field()
-  @PrimaryKey()
+  @PrimaryGeneratedColumn()
   id!: number;
 
   @Field(() => String)
-  @Property({ type: "date" })
-  createdAt = new Date();
-
-  @Field()
-  creatorId!: number;
-
-  @Field(() => User)
-  @ManyToOne()
-  donator: User;
+  @CreateDateColumn()
+  createdAt: Date;
   
   @Field()
-  @Property({type: "int", default: 0 })
+  @Column({type: "int", default: 0 })
   donation!: number;
 
   @Field()
-  @Property({type: "int", default: 0 })
+  @Column({ type: "int", default: 0 })
   tip!: number;
+
+  @Field()
+  @Column()
+  creatorId: number;
+
+  @ManyToOne(() => User, user => user.donations)
+  donator: User;
 }

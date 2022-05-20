@@ -10,57 +10,51 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
-const core_1 = require("@mikro-orm/core");
 const type_graphql_1 = require("type-graphql");
+const typeorm_1 = require("typeorm");
 const Donation_1 = require("./Donation");
-let User = class User {
+let User = class User extends typeorm_1.BaseEntity {
     constructor() {
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
+        super(...arguments);
+        this.createdAt = Date;
     }
 };
 __decorate([
     (0, type_graphql_1.Field)(),
-    (0, core_1.PrimaryKey)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => String),
-    (0, core_1.Property)({ type: "date" }),
+    (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Object)
 ], User.prototype, "createdAt", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => String),
-    (0, core_1.Property)({ type: "date", onUpdate: () => new Date() }),
-    __metadata("design:type", Object)
-], User.prototype, "updatedAt", void 0);
-__decorate([
     (0, type_graphql_1.Field)(),
-    (0, core_1.Property)({ type: "text", unique: true }),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], User.prototype, "username", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
-    (0, core_1.Property)({ type: "text" }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], User.prototype, "firstName", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
-    (0, core_1.Property)({ type: "text" }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => [Donation_1.Donation], { nullable: true }),
-    (0, core_1.OneToMany)(() => Donation_1.Donation, donation => donation.donator),
-    __metadata("design:type", Array)
-], User.prototype, "donations", void 0);
-__decorate([
-    (0, core_1.Property)({ type: "text" }),
+    (0, typeorm_1.Column)({ type: "text" }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Donation_1.Donation, donation => donation.donator),
+    __metadata("design:type", Array)
+], User.prototype, "donations", void 0);
 User = __decorate([
     (0, type_graphql_1.ObjectType)(),
-    (0, core_1.Entity)()
+    (0, typeorm_1.Entity)()
 ], User);
 exports.User = User;
 //# sourceMappingURL=User.js.map

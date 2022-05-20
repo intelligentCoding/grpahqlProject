@@ -1,53 +1,59 @@
 import { Donation } from "../entities/Donation";
 import { Mycontext } from "src/types";
-import { Arg, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { auth } from "../auth";
+
+@InputType()
+class DonationInput {
+  @Field()
+  tip: number;
+  @Field()
+  donation: number;
+}
+
 @Resolver()
-export class PostResolver {
+export class DonationResolver {
   @Query(() => [Donation])
-  donations(@Ctx() { em }: Mycontext): Promise<Donation[]> {
-    return em.find(Donation, {});
+  async donations(): Promise<Donation[]> {
+    return Donation.find();
   }
 
   @Query(() => Donation, { nullable: true })
-  donationById(
-    @Arg("id", () => Int) id: number,
-    @Ctx() { em }: Mycontext
-  ): Promise<Donation | null> {
-    return em.findOne(Donation, { id });
+  donationById(@Arg("id") id: number): Promise<Donation | undefined> {
+    return Donation.findOne(id);
   }
 
   @Mutation(() => Donation)
   async updateDonation(
     @Arg("id") id: number,
     @Arg("donation", { nullable: true }) donation: number,
-    @Ctx() { em }: Mycontext
   ): Promise<Donation | null> {
-    const userDonation = await em.findOne(Donation, { id });
-    if (!userDonation) {
-      return null;
+    // TODO: This needs to be updated with single SQL query
+    // finding a donation and updating it is nto efficient.
+    const donationByUser = await Donation.findOne(id);
+    if(!donationByUser) return null;
+    if(donation){
+      await Donation.update({id}, {donation});
     }
-    if (typeof donation !== "undefined") {
-      userDonation.donation = donation;
-      await em.persistAndFlush(userDonation);
-    }
-    return userDonation;
+    return donationByUser;
   }
 
   @Mutation(() => Donation)
+  @UseMiddleware(auth)
   async createDonation(
-    @Arg("donation") donation: number,
-    @Arg("tip") tip: number,
-    @Ctx() { em, req }: Mycontext
-  ): Promise<Donation | null> {
-    const userId = req.session.userId ? req.session.userId: null;
-    const post = em.create(Donation, {
-      creatorId: userId,
-      tip,
-      donation,
-      donator: userId,
-      createdAt: new Date(),
-    });
-    await em.persistAndFlush(post);
-    return post;
+    @Arg("options", () => DonationInput) options: DonationInput,
+    @Ctx() { req }: Mycontext
+  ): Promise<Donation> {
+    return Donation.create({
+      ...options,
+      creatorId: req.session.userId,
+    }).save();
+  }
+
+  @Mutation(()=>Boolean)
+  async deleteDonation(
+    @Arg("id") id: number): Promise<boolean> {
+    await Donation.delete(id);
+    return true;
   }
 }

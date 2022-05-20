@@ -1,38 +1,33 @@
-import { Entity, Property, PrimaryKey, ManyToOne, OneToMany } from "@mikro-orm/core";
 import { Field, ObjectType } from "type-graphql";
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Donation } from "./Donation";
 
 @ObjectType()
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @Field()
-  @PrimaryKey()
+  @PrimaryGeneratedColumn()
   id!: number;
 
   @Field(() => String)
-  @Property({ type: "date" })
-  createdAt = new Date();
-
-  @Field(() => String)
-  @Property({ type: "date", onUpdate: () => new Date() })
-  updatedAt = new Date();
+  @CreateDateColumn()
+  createdAt = Date;
 
   @Field()
-  @Property({ type: "text", unique: true })
+  @Column({ unique: true })
   username!: string;
   
   @Field()
-  @Property({ type: "text"})
+  @Column()
   firstName!: string;
 
   @Field()
-  @Property({ type: "text"})
+  @Column()
   lastName!: string;
 
-  @Field(() => [Donation], { nullable: true })
-  @OneToMany(() => Donation, donation => donation.donator)
-  donations: Donation[];
-
-  @Property({type: "text"})
+  @Column({type: "text"})
   password!: string;
+
+  @OneToMany(()=> Donation, donation => donation.donator)
+  donations: Donation[];
 }

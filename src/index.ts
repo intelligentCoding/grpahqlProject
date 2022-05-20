@@ -1,13 +1,11 @@
 import "reflect-metadata";
-import { MikroORM } from "@mikro-orm/core";
 import { __prod__ } from "./constants";
-import { Post } from "./entities/Donation";
-import microConfig from "./mikro-orm.config";
+import { Donation } from "./entities/Donation";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
-import { PostResolver } from "./resolvers/donation";
+import { DonationResolver } from "./resolvers/donation";
 import { UserResolver } from "./resolvers/User";
 // import redis from "redis";
 import session from "express-session";
@@ -15,12 +13,20 @@ import connectRedis from "connect-redis";
 import { Mycontext } from "./types";
 import Redis from "ioredis";
 import cors from "cors";
+import { createConnection } from 'typeorm'
+import { User } from "./entities/User";
 
 const main = async () => {
-  const orm = await MikroORM.init(microConfig);
+  const conn = await createConnection({
+    type: 'postgres',
+    database: "graphQL",
+    username: "postgres",
+    password: "kasjee",
+    logging: true,
+    synchronize: true,
+    entities: [User, Donation]
+  })
 
-  //automatically run migrations before anything else
-  await orm.getMigrator().up();
   const app = express();
   //run session middleware before apollo
   const RedisStore = connectRedis(session);
@@ -56,10 +62,10 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [HelloResolver, DonationResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): Mycontext => ({ em: orm.em, req, res }),
+    context: ({ req, res }): Mycontext => ({ req, res }),
   });
   await apolloServer.start();
 
