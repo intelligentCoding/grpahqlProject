@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Link } from "@chakra-ui/core"
 import NextLink from "next/link";
-import { useFindUserQuery, useLogoutMutation } from '../generated/graphql';
+import { useUserQuery, useLogoutMutation } from '../generated/graphql';
 import router, { useRouter } from 'next/router'
 
 interface NavBarProps {
@@ -9,11 +9,11 @@ interface NavBarProps {
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
     const [ {fetching: logoutFetching}, logout] = useLogoutMutation();
-    const [{data, fetching}] = useFindUserQuery();
+    const [{data, fetching}] = useUserQuery();
     let navBody = null;
 
     if(fetching) {
-    } else if(!data?.findUser){
+    } else if(!data?.user){
         navBody = (
             <>
                 <NextLink href="/login">
@@ -27,7 +27,8 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     } else {
         navBody = (
             <Flex>
-                <Box color="#FEEBC8">Welcome to Donations.ca {data.findUser.username}</Box>
+                <Box color="#FEEBC8">Welcome to Donations.ca {data.user.username}</Box>
+                <Box w='70px' />
                 <Button 
                     isLoading={logoutFetching} 
                     onClick={() => {
@@ -35,6 +36,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                     router.push('/login');
                     }} 
                     variant="link"
+                    color='#FEEBC8'
                 >logout</Button>
             </Flex>
         )
