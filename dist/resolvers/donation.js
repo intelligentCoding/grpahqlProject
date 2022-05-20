@@ -16,19 +16,6 @@ exports.DonationResolver = void 0;
 const Donation_1 = require("../entities/Donation");
 const type_graphql_1 = require("type-graphql");
 const auth_1 = require("../auth");
-let DonationInput = class DonationInput {
-};
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", Number)
-], DonationInput.prototype, "tip", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", Number)
-], DonationInput.prototype, "donation", void 0);
-DonationInput = __decorate([
-    (0, type_graphql_1.InputType)()
-], DonationInput);
 let DonationResolver = class DonationResolver {
     async donations() {
         return Donation_1.Donation.find();
@@ -49,7 +36,7 @@ let DonationResolver = class DonationResolver {
         return Donation_1.Donation.create({
             tip,
             donation,
-            creatorId: req.session.userId,
+            donatorId: req.session.userId,
         }).save();
     }
     async deleteDonation(id) {

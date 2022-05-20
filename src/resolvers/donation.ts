@@ -1,15 +1,8 @@
 import { Donation } from "../entities/Donation";
 import { Mycontext } from "src/types";
-import { Arg, Ctx, Field, InputType, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { auth } from "../auth";
 
-@InputType()
-class DonationInput {
-  @Field()
-  tip: number;
-  @Field()
-  donation: number;
-}
 
 @Resolver()
 export class DonationResolver {
@@ -48,7 +41,7 @@ export class DonationResolver {
     return Donation.create({
       tip,
       donation,
-      creatorId: req.session.userId,
+      donatorId: req.session.userId,
     }).save();
   }
 

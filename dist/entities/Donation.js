@@ -39,7 +39,7 @@ __decorate([
     (0, type_graphql_1.Field)(),
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], Donation.prototype, "creatorId", void 0);
+], Donation.prototype, "donatorId", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => User_1.User, user => user.donations),
     __metadata("design:type", User_1.User)

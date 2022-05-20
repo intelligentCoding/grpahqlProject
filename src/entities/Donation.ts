@@ -24,7 +24,7 @@ export class Donation extends BaseEntity {
 
   @Field()
   @Column()
-  creatorId: number;
+  donatorId: number;
 
   @ManyToOne(() => User, user => user.donations)
   donator: User;
