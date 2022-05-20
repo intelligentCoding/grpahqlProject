@@ -2,13 +2,28 @@ import { Donation } from "../entities/Donation";
 import { Mycontext } from "src/types";
 import { Arg, Ctx, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { auth } from "../auth";
+import { Connection, getConnection } from "typeorm";
 
 
 @Resolver()
 export class DonationResolver {
   @Query(() => [Donation])
-  async donations(): Promise<Donation[]> {
-    return Donation.find();
+  async donations(
+    @Arg('limit') limit: number,
+    @Arg('cursor', () => String, { nullable: true}) cursor: string | null,
+  ): Promise<Donation[]> {
+    const customLimit = Math.min(25, limit);
+    const qb =  getConnection()
+    .getRepository(Donation)
+    .createQueryBuilder("d")
+    .orderBy('"createdAt"', "DESC")
+    .take(customLimit)
+    if(cursor){
+      qb.where('"createdAt" < :cursor', {
+        cursor: new Date(parseInt(cursor))
+      })
+    }
+    return qb.getMany();
   }
 
   @Query(() => Donation, { nullable: true })

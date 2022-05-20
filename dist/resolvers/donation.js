@@ -16,9 +16,21 @@ exports.DonationResolver = void 0;
 const Donation_1 = require("../entities/Donation");
 const type_graphql_1 = require("type-graphql");
 const auth_1 = require("../auth");
+const typeorm_1 = require("typeorm");
 let DonationResolver = class DonationResolver {
-    async donations() {
-        return Donation_1.Donation.find();
+    async donations(limit, cursor) {
+        const customLimit = Math.min(25, limit);
+        const qb = (0, typeorm_1.getConnection)()
+            .getRepository(Donation_1.Donation)
+            .createQueryBuilder("d")
+            .orderBy('"createdAt"', "DESC")
+            .take(customLimit);
+        if (cursor) {
+            qb.where('"createdAt" < :cursor', {
+                cursor: new Date(parseInt(cursor))
+            });
+        }
+        return qb.getMany();
     }
     donationById(id) {
         return Donation_1.Donation.findOne(id);
@@ -46,8 +58,10 @@ let DonationResolver = class DonationResolver {
 };
 __decorate([
     (0, type_graphql_1.Query)(() => [Donation_1.Donation]),
+    __param(0, (0, type_graphql_1.Arg)('limit')),
+    __param(1, (0, type_graphql_1.Arg)('cursor', () => String, { nullable: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], DonationResolver.prototype, "donations", null);
 __decorate([
