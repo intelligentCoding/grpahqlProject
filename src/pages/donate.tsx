@@ -26,7 +26,6 @@ const CreateDonation: React.FC<createDonationProps> = ({}) => {
             <PageWrapper>
                 <Formik initialValues={{tip: 0, donation: 0}} onSubmit={ async (values, {setErrors}) => {
                     const {error} = await createDonation(values);
-                    console.log(error?.message)
                     if(error?.message){
                         setDonationError(error.message);
                     }

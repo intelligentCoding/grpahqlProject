@@ -5,8 +5,6 @@ import {
     Stat,
     StatLabel,
     StatNumber,
-    StatHelpText,
-    StatArrow,
     StatGroup,
     Box, Flex, Spinner
   } from "@chakra-ui/core";
@@ -45,8 +43,6 @@ const Donation = ({}) => {
             id: intId
         }
     })
-    // const returnedData = data?.donationById;
-    // if(data) console.log(data!.donationById)
     return (
         <>
         <NavBar/>

@@ -1,17 +1,27 @@
 import { NavBar } from "../components/Navbar"
-import { useDonationsQuery } from "../generated/graphql";
+import { useDeleteDonationMutation, useDonationsQuery, useUserQuery } from "../generated/graphql";
 import NextLink from "next/link";
 import {
   Stat,
   StatLabel,
   StatNumber,
   StatGroup,
-  Box, Flex, Spinner, Link, Heading
+  Box, Flex, Spinner, Link, Heading, IconButton
 } from "@chakra-ui/core";
+import router from "next/router";
 // import DonationRow from "../components/DonationRow";
 const Index = () => {
   const [{data, fetching}] = useDonationsQuery();
+  const [{fetching: logoutFetching}, deleteDonation] = useDeleteDonationMutation();
+  const [{data: userData, fetching: userFetching}] = useUserQuery();
 
+  const getColor = (donatorId: number) => {
+      if(donatorId === userData?.user?.id){
+        return "blue";
+      } else {
+        return "orange"
+      }
+  }
   return (
   <>
     <NavBar/>
@@ -20,7 +30,7 @@ const Index = () => {
     ) : (
       data!.donations.map((d, index) => (
       <>
-     <Box bg="tomato" alignItems="center" m={2} w="100%" p={4} color="white">
+     <Box bg={userData?.user?.id == d.donatorId ? "#A569BD" : "#3362FF"} alignItems="center" m={2} w="100%" p={4} color="white">
       <StatGroup>
       <Stat>
         <StatLabel>Donated Amount</StatLabel>
@@ -45,6 +55,31 @@ const Index = () => {
             <Heading fontSize="xl">Details</Heading>
           </Link>
         </NextLink>
+      </Box>
+      <Box flex={1}>
+        {userData?.user?.id == d.donatorId && (
+          <>
+          <IconButton
+            variantColor="orange"
+            icon="edit"
+            aria-label="Delete Donation"
+            onClick={ () => {
+              router.push(`/donations/edit/${d.id}`);
+            }}
+          />
+          <IconButton
+            variantColor="red"
+            icon="delete"
+            aria-label="Delete Donation"
+            onClick={ async () => {
+              await deleteDonation({
+                id: d.id
+              });
+              router.push("/");
+            }}
+          />
+          </>
+        )}
       </Box>
       </StatGroup>
     </Box>

@@ -43,6 +43,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                 <Button
                     onClick={async () => {
                         await logout();
+                        router.push("/");
                     }}
                     isLoading={logoutFetching}
                     variant="link"
@@ -65,11 +66,6 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           <Box ml={"auto"}>{navBody}</Box>
         </Flex>
       </Flex>
-        // <Flex p={4} bg="#652B19">
-        //     <Box ml={"auto"}>
-        //         {navBody}
-        //     </Box>
-        // </Flex>
 
 )
 }

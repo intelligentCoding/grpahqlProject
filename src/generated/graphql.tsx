@@ -45,6 +45,7 @@ export type Mutation = {
 
 
 export type MutationUpdateDonationArgs = {
+  tip?: Maybe<Scalars['Int']>;
   donation?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
 };
@@ -57,7 +58,7 @@ export type MutationCreateDonationArgs = {
 
 
 export type MutationDeleteDonationArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
@@ -119,6 +120,16 @@ export type CreateDonationMutation = (
   ) }
 );
 
+export type DeleteDonationMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteDonationMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteDonation'>
+);
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
@@ -171,6 +182,7 @@ export type RegisterMutation = (
 
 export type UpdateDonationMutationVariables = Exact<{
   id: Scalars['Int'];
+  tip: Scalars['Int'];
   donation: Scalars['Int'];
 }>;
 
@@ -234,6 +246,15 @@ export const CreateDonationDocument = gql`
 export function useCreateDonationMutation() {
   return Urql.useMutation<CreateDonationMutation, CreateDonationMutationVariables>(CreateDonationDocument);
 };
+export const DeleteDonationDocument = gql`
+    mutation DeleteDonation($id: Int!) {
+  deleteDonation(id: $id)
+}
+    `;
+
+export function useDeleteDonationMutation() {
+  return Urql.useMutation<DeleteDonationMutation, DeleteDonationMutationVariables>(DeleteDonationDocument);
+};
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(options: {username: $username, password: $password}) {
@@ -284,8 +305,8 @@ export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
 export const UpdateDonationDocument = gql`
-    mutation UpdateDonation($id: Int!, $donation: Int!) {
-  updateDonation(id: $id, donation: $donation) {
+    mutation UpdateDonation($id: Int!, $tip: Int!, $donation: Int!) {
+  updateDonation(id: $id, tip: $tip, donation: $donation) {
     id
     donation
     tip
