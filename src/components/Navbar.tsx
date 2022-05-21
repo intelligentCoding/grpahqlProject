@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Link } from "@chakra-ui/core"
+import { Box, Button, Flex, Heading, Link } from "@chakra-ui/core"
 import NextLink from "next/link";
 import { useUserQuery, useLogoutMutation } from '../generated/graphql';
 import router, { useRouter } from 'next/router'
@@ -26,28 +26,50 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         )
     } else {
         navBody = (
-            <Flex>
-                <Box color="#FEEBC8">Welcome to Donations.ca {data.user.username}</Box>
-                <Box w='70px' />
-                <Button 
-                    isLoading={logoutFetching} 
-                    onClick={() => {
-                    logout();
-                    router.push('/login');
-                    }} 
+            <>
+            <Flex align="center">
+                <NextLink href="/donate">
+                <Button as={Link} mr={4}>
+                    Donate Now
+                </Button>
+                </NextLink>
+                <NextLink href="/">
+                <Button as={Link} mr={4}>
+                    View Donations
+                </Button>
+                </NextLink>
+                <Box mr={2} color="white">Welcome {data.user.username}</Box>
+            
+                <Button
+                    onClick={async () => {
+                        await logout();
+                    }}
+                    isLoading={logoutFetching}
                     variant="link"
-                    color='#FEEBC8'
-                >logout</Button>
+                    >
+                    logout
+                </Button>
             </Flex>
+            </>
         )
     }
 
     return (
-        <Flex p={4} bg="#652B19">
-            <Box ml={"auto"}>
-                {navBody}
-            </Box>
+        <Flex zIndex={1} position="sticky" top={0} bg="#652B19" p={4}>
+        <Flex flex={1} m="auto" align="center" maxW={800}>
+          <NextLink href="/">
+            <Link>
+              <Heading color="white">Donations.ca</Heading>
+            </Link>
+          </NextLink>
+          <Box ml={"auto"}>{navBody}</Box>
         </Flex>
+      </Flex>
+        // <Flex p={4} bg="#652B19">
+        //     <Box ml={"auto"}>
+        //         {navBody}
+        //     </Box>
+        // </Flex>
 
 )
 }

@@ -18,7 +18,8 @@ export type Donation = {
   createdAt: Scalars['String'];
   donation: Scalars['Float'];
   tip: Scalars['Float'];
-  creatorId: Scalars['Float'];
+  donatorId: Scalars['Float'];
+  donator: User;
 };
 
 export type FieldError = {
@@ -44,8 +45,8 @@ export type Mutation = {
 
 
 export type MutationUpdateDonationArgs = {
-  donation?: Maybe<Scalars['Float']>;
-  id: Scalars['Float'];
+  donation?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
 };
 
 
@@ -79,7 +80,7 @@ export type Query = {
 
 
 export type QueryDonationByIdArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 export type RegisterInput = {
@@ -168,6 +169,48 @@ export type RegisterMutation = (
   ) }
 );
 
+export type UpdateDonationMutationVariables = Exact<{
+  id: Scalars['Int'];
+  donation: Scalars['Int'];
+}>;
+
+
+export type UpdateDonationMutation = (
+  { __typename?: 'Mutation' }
+  & { updateDonation: (
+    { __typename?: 'Donation' }
+    & Pick<Donation, 'id' | 'donation' | 'tip' | 'donatorId'>
+  ) }
+);
+
+export type DonationByIdQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DonationByIdQuery = (
+  { __typename?: 'Query' }
+  & { donationById?: Maybe<(
+    { __typename?: 'Donation' }
+    & Pick<Donation, 'id' | 'donation' | 'tip' | 'createdAt'>
+    & { donator: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    ) }
+  )> }
+);
+
+export type DonationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DonationsQuery = (
+  { __typename?: 'Query' }
+  & { donations: Array<(
+    { __typename?: 'Donation' }
+    & Pick<Donation, 'id' | 'createdAt' | 'donation' | 'tip' | 'donatorId'>
+  )> }
+);
+
 export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -239,6 +282,53 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const UpdateDonationDocument = gql`
+    mutation UpdateDonation($id: Int!, $donation: Int!) {
+  updateDonation(id: $id, donation: $donation) {
+    id
+    donation
+    tip
+    donatorId
+  }
+}
+    `;
+
+export function useUpdateDonationMutation() {
+  return Urql.useMutation<UpdateDonationMutation, UpdateDonationMutationVariables>(UpdateDonationDocument);
+};
+export const DonationByIdDocument = gql`
+    query DonationById($id: Int!) {
+  donationById(id: $id) {
+    id
+    donation
+    tip
+    createdAt
+    donator {
+      id
+      username
+    }
+  }
+}
+    `;
+
+export function useDonationByIdQuery(options: Omit<Urql.UseQueryArgs<DonationByIdQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<DonationByIdQuery>({ query: DonationByIdDocument, ...options });
+};
+export const DonationsDocument = gql`
+    query Donations {
+  donations {
+    id
+    createdAt
+    donation
+    tip
+    donatorId
+  }
+}
+    `;
+
+export function useDonationsQuery(options: Omit<Urql.UseQueryArgs<DonationsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<DonationsQuery>({ query: DonationsDocument, ...options });
 };
 export const UserDocument = gql`
     query User {

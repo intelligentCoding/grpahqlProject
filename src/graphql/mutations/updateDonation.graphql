@@ -1,0 +1,8 @@
+mutation UpdateDonation($id: Int!, $donation: Int!){
+    updateDonation(id: $id, donation: $donation){
+        id
+        donation
+        tip
+        donatorId
+    }
+}

@@ -3,7 +3,6 @@ import { Formik, Form } from "formik";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/core';
 import { PageWrapper } from "../components/PageWrapper"
 import { CustomInput } from '../components/Input';
-import { useMutation } from 'urql';
 import { useCreateDonationMutation, useUserQuery } from '../generated/graphql';
 import { errorMap } from '../utils';
 import {useRouter} from 'next/router';
@@ -22,7 +21,7 @@ const CreateDonation: React.FC<createDonationProps> = ({}) => {
         }
     }, [fetching, data, router])
     return (
-        <div>
+        <>
             <NavBar/>
             <PageWrapper>
                 <Formik initialValues={{tip: 0, donation: 0}} onSubmit={ async (values, {setErrors}) => {
@@ -52,7 +51,7 @@ const CreateDonation: React.FC<createDonationProps> = ({}) => {
                     </Alert>
                 )}
             </PageWrapper>
-        </div>
+        </>
     );
 }
 //in next.js have to export default component

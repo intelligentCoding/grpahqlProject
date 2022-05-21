@@ -1,0 +1,9 @@
+query Donations{
+    donations{
+        id
+        createdAt
+        donation
+        tip
+        donatorId
+    }
+}

@@ -16,7 +16,7 @@ export const Register: React.FC<registerProps> = ({}) => {
     const router = useRouter();
     const [, register] = useRegisterMutation()
     return (
-        <div>
+        <>
             <NavBar/>
             <PageWrapper>
                 <Formik initialValues={{firstName: "", lastName: "", username: "", password: ""}} onSubmit={ async (values, {setErrors}) => {
@@ -44,7 +44,7 @@ export const Register: React.FC<registerProps> = ({}) => {
                     )}
                 </Formik>
             </PageWrapper>
-        </div>
+        </>
     );
 }
 //in next.js have to export default component
