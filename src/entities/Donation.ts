@@ -26,6 +26,7 @@ export class Donation extends BaseEntity {
   @Column()
   donatorId: number;
 
+  @Field()
   @ManyToOne(() => User, user => user.donations)
   donator: User;
 }

@@ -18,29 +18,22 @@ const type_graphql_1 = require("type-graphql");
 const auth_1 = require("../auth");
 const typeorm_1 = require("typeorm");
 let DonationResolver = class DonationResolver {
-    async donations(limit, cursor) {
-        const customLimit = Math.min(25, limit);
+    async donations() {
         const qb = (0, typeorm_1.getConnection)()
             .getRepository(Donation_1.Donation)
             .createQueryBuilder("d")
-            .orderBy('"createdAt"', "DESC")
-            .take(customLimit);
-        if (cursor) {
-            qb.where('"createdAt" < :cursor', {
-                cursor: new Date(parseInt(cursor))
-            });
-        }
+            .orderBy('d."createdAt"', "DESC");
         return qb.getMany();
     }
     donationById(id) {
-        return Donation_1.Donation.findOne(id);
+        return Donation_1.Donation.findOne(id, { relations: ["donator"] });
     }
-    async updateDonation(id, donation) {
+    async updateDonation(id, donation, { req }) {
         const donationByUser = await Donation_1.Donation.findOne(id);
         if (!donationByUser)
             return null;
         if (donation) {
-            await Donation_1.Donation.update({ id }, { donation });
+            await Donation_1.Donation.update({ id, donatorId: req.session.userId }, { donation });
         }
         return donationByUser;
     }
@@ -58,25 +51,25 @@ let DonationResolver = class DonationResolver {
 };
 __decorate([
     (0, type_graphql_1.Query)(() => [Donation_1.Donation]),
-    __param(0, (0, type_graphql_1.Arg)('limit', () => type_graphql_1.Int)),
-    __param(1, (0, type_graphql_1.Arg)('cursor', () => String, { nullable: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], DonationResolver.prototype, "donations", null);
 __decorate([
     (0, type_graphql_1.Query)(() => Donation_1.Donation, { nullable: true }),
-    __param(0, (0, type_graphql_1.Arg)("id")),
+    __param(0, (0, type_graphql_1.Arg)("id", () => type_graphql_1.Int)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], DonationResolver.prototype, "donationById", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Donation_1.Donation),
-    __param(0, (0, type_graphql_1.Arg)("id")),
-    __param(1, (0, type_graphql_1.Arg)("donation", { nullable: true })),
+    (0, type_graphql_1.UseMiddleware)(auth_1.auth),
+    __param(0, (0, type_graphql_1.Arg)("id", () => type_graphql_1.Int)),
+    __param(1, (0, type_graphql_1.Arg)("donation", () => type_graphql_1.Int, { nullable: true })),
+    __param(2, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, Object]),
     __metadata("design:returntype", Promise)
 ], DonationResolver.prototype, "updateDonation", null);
 __decorate([
