@@ -10,13 +10,13 @@ const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
 const hello_1 = require("./resolvers/hello");
 const donation_1 = require("./resolvers/donation");
-const User_1 = require("./resolvers/User");
+const user_1 = require("./resolvers/user");
 const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const ioredis_1 = __importDefault(require("ioredis"));
 const cors_1 = __importDefault(require("cors"));
 const typeorm_1 = require("typeorm");
-const User_2 = require("./entities/User");
+const User_1 = require("./entities/User");
 const path_1 = __importDefault(require("path"));
 const main = async () => {
     const conn = await (0, typeorm_1.createConnection)({
@@ -26,7 +26,7 @@ const main = async () => {
         password: "kasjee",
         logging: true,
         synchronize: true,
-        entities: [User_2.User, Donation_1.Donation],
+        entities: [User_1.User, Donation_1.Donation],
         migrations: [path_1.default.join(__dirname, "./migrations/*")]
     });
     await conn.runMigrations();
@@ -56,7 +56,7 @@ const main = async () => {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: await (0, type_graphql_1.buildSchema)({
-            resolvers: [hello_1.HelloResolver, donation_1.DonationResolver, User_1.UserResolver],
+            resolvers: [hello_1.HelloResolver, donation_1.DonationResolver, user_1.UserResolver],
             validate: false,
         }),
         context: ({ req, res }) => ({ req, res }),

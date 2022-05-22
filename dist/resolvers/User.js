@@ -17,7 +17,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
 const User_1 = require("../entities/User");
-const argon2_1 = __importDefault(require("argon2"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 let LoginInput = class LoginInput {
@@ -100,7 +100,8 @@ let UserResolver = class UserResolver {
                 ],
             };
         }
-        const hashedPassword = await argon2_1.default.hash(options.password);
+        const salt = bcrypt_1.default.genSaltSync(10);
+        const hashedPassword = bcrypt_1.default.hashSync(options.password, salt);
         let user;
         try {
             const results = await (0, typeorm_1.getConnection)().createQueryBuilder().insert().into(User_1.User).values({
@@ -139,7 +140,8 @@ let UserResolver = class UserResolver {
             };
         }
         try {
-            const valid = await argon2_1.default.verify(user.password, options.password);
+            console.log(options.password);
+            const valid = bcrypt_1.default.compareSync(options.password, user.password);
             if (!valid)
                 return {
                     errors: [
@@ -211,4 +213,4 @@ UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], UserResolver);
 exports.UserResolver = UserResolver;
-//# sourceMappingURL=User.js.map
+//# sourceMappingURL=user.js.map

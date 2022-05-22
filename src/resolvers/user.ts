@@ -1,6 +1,7 @@
 import { User } from "../entities/User";
 import { Mycontext } from "src/types";
-import argon2 from "argon2";
+import bcrypt from 'bcrypt';
+
 import {
   Arg,
   Ctx,
@@ -91,7 +92,8 @@ export class UserResolver {
         ],
       };
     }
-    const hashedPassword = await argon2.hash(options.password);
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(options.password, salt);
     let user;
     try {
       const results = await getConnection().createQueryBuilder().insert().into(User).values({
@@ -138,7 +140,8 @@ export class UserResolver {
     }
 
     try {
-      const valid = await argon2.verify(user.password, options.password);
+      console.log(options.password)
+      const valid = bcrypt.compareSync(options.password,user.password);
       if (!valid)
         return {
           errors: [

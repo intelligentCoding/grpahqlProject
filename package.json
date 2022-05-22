@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "tsc -w",
     "dev": "nodemon dist/index.js",
-    "start": "node dist/index.js",
+    "start": "tsc && node dist/index.js",
     "create:migration": "mikro-orm migration:create"
   },
   "keywords": [],
@@ -32,8 +32,9 @@
     "@mikro-orm/core": "^5.1.3",
     "@mikro-orm/migrations": "^5.1.3",
     "@mikro-orm/postgresql": "^5.1.3",
+    "@types/bcrypt": "^5.0.0",
     "apollo-server-express": "^3.7.0",
-    "argon2": "^0.28.5",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "graphql": "^15.8.0",
