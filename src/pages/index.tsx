@@ -9,7 +9,6 @@ import {
   Box, Flex, Spinner, Link, Heading, IconButton
 } from "@chakra-ui/core";
 import router from "next/router";
-// import DonationRow from "../components/DonationRow";
 const Index = () => {
   const [{data, fetching}] = useDonationsQuery();
   const [{fetching: logoutFetching}, deleteDonation] = useDeleteDonationMutation();

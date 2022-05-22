@@ -20,7 +20,6 @@ export const Register: React.FC<registerProps> = ({}) => {
             <NavBar/>
             <PageWrapper>
                 <Formik initialValues={{firstName: "", lastName: "", username: "", password: ""}} onSubmit={ async (values, {setErrors}) => {
-                    console.log(values);
                     const response = await register(values);
                     if(response.data?.register?.errors) {
                         setErrors(errorMap(response.data.register.errors));
@@ -31,7 +30,7 @@ export const Register: React.FC<registerProps> = ({}) => {
                     {({isSubmitting}) => (
                         <Form>
                             <FormControl>
-                                <FormLabel htmlFor='username'>userName</FormLabel>
+                                {/* <FormLabel htmlFor='username'>userName</FormLabel> */}
                                 <CustomInput name="username" placeholder="Please enter user name" label="username"/>
                                 <CustomInput name="password" type="password" placeholder="Please enter password" label="password"/>
                                 <CustomInput name="firstName" type="firstName" placeholder="Please enter firstName" label="firstName"/>
