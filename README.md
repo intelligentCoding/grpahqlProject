@@ -13,7 +13,8 @@
 - Express/Express Session
 - graphQL/Apollo Express server
 - postgres
-Simple Donation application which lets you register/login and make donations. 
+
+# Simple Donation application which lets you register/login and make donations. 
 
 ## How to run it
 - In the root of the project enter **docker-compose up --build** (This is assuming, you already have docker setup on your system)
