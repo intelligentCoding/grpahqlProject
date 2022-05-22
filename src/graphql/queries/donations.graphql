@@ -1,9 +1,9 @@
-query Donations{
-    donations{
-        id
-        createdAt
-        donation
-        tip
-        donatorId
-    }
+query Donations {
+  donations {
+    id
+    createdAt
+    donation
+    tip
+    donatorId
+  }
 }

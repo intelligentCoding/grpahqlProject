@@ -26,33 +26,35 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         )
     } else {
         navBody = (
-            <>
+          <>
             <Flex align="center">
-                <NextLink href="/donate">
+              <NextLink href="/donate">
                 <Button as={Link} mr={4}>
-                    Donate Now
+                  Donate Now
                 </Button>
-                </NextLink>
-                <NextLink href="/">
+              </NextLink>
+              <NextLink href="/">
                 <Button as={Link} mr={4}>
-                    View Donations
+                  View Donations
                 </Button>
-                </NextLink>
-                <Box mr={2} color="white">Welcome {data.user.username}</Box>
-            
-                <Button
-                    onClick={async () => {
-                        await logout();
-                        router.push("/");
-                    }}
-                    isLoading={logoutFetching}
-                    variant="link"
-                    >
-                    logout
-                </Button>
+              </NextLink>
+              <Box mr={2} color="white">
+                Welcome {data.user.username}
+              </Box>
+
+              <Button
+                onClick={async () => {
+                  await logout();
+                  router.push("/");
+                }}
+                isLoading={logoutFetching}
+                variant="link"
+              >
+                logout
+              </Button>
             </Flex>
-            </>
-        )
+          </>
+        );
     }
 
     return (
