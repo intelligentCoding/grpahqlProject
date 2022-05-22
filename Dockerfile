@@ -1,14 +1,8 @@
-FROM node:14 as builder
+FROM node:14
 
-USER node
-WORKDIR /home/node
-
-COPY --chown=node:node package*.json ./
+WORKDIR /app
+COPY package.json ./
 RUN npm install
-
-COPY --chown=node:node . .
-
-EXPOSE 3000
-RUN ["npm", "run", "build"]
-
+COPY ./ ./
+EXPOSE 4000
 CMD ["npm", "start"]
