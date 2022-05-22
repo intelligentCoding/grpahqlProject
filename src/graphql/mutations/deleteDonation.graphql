@@ -1,0 +1,3 @@
+mutation DeleteDonation($id: Int!) {
+  deleteDonation(id: $id)
+}

@@ -1,0 +1,12 @@
+query DonationById($id: Int!) {
+  donationById(id: $id) {
+    id
+    donation
+    tip
+    createdAt
+    donator {
+      id
+      username
+    }
+  }
+}
