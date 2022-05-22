@@ -13,6 +13,7 @@
 - Express/Express Session
 - graphQL/Apollo Express server
 - postgres
+- tsc (to compile TS, this speeds up the app)
 
 # Simple Donation application which lets you register/login and make donations. 
 
