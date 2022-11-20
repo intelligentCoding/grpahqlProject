@@ -15,7 +15,7 @@
 - postgres
 - tsc (to compile TS, this speeds up the app)
 
-# Simple Donation application which lets you register/login and make donations. 
+# Simple application that keep tracks of customer fruits preferences for surprise bucket of the month. 
 
 ## How to run it
 - In the root of the project enter **docker-compose up --build** (This is assuming, you already have docker setup on your system)
@@ -27,25 +27,21 @@ It is notices that sometimes running **docker-compose up --build** gives an erro
 
 ## First Time Running the app
 When you run the app first time, you will not see any data on the main page, You will have to register users and make donation to see data on the screen. (Work in progress to populated docker postgress with dummy data)
-## Register
-![image](https://user-images.githubusercontent.com/31515792/169682851-a599ef57-b44d-47df-ba17-2809ed6b11dc.png)
-## Login
-![image](https://user-images.githubusercontent.com/31515792/169682890-c491fc12-a57b-41e2-8893-401b2d970dc3.png)
-## Make Donation
-After registering/login click on *Donate Now* button on navbar
-![image](https://user-images.githubusercontent.com/31515792/169682948-8cd13dd7-74fb-4be9-9d5d-423ebcd75969.png)
-And make a donation
-![image](https://user-images.githubusercontent.com/31515792/169682962-4b60c9e3-2230-4576-abfc-6012c717d0a2.png)
-## View Donations
-click on *View Donations* button to view all the donations. 
-**If you are logged in, you will see your donations in purple color and will also be able to edit or delete your own donations**. Donations made by other users will be in **blue** color. 
-![image](https://user-images.githubusercontent.com/31515792/169683098-81d40234-4ae8-4217-96e8-925a188c537f.png)
-## Update Donation
-By clicking on edit button, you can update the donation you made
-![image](https://user-images.githubusercontent.com/31515792/169683381-4a5d5f83-6b69-496a-a888-c122db1c228d.png)
-## Donatioin Detail
-Click on Details button to see the details about the donation.
-![image](https://user-images.githubusercontent.com/31515792/169683745-55f6f5be-9dee-4adb-8ef6-dcdda1a9cbd5.png)
+
+## Accounts
+There are few accoutns created for you to use. 
+UserName: acerta1 acerta2 acertaAdmin
+password: acerta
+
+## Validation:
+- Admin can add new fruits but not the fruits already added.
+- When adding preference for each fruit, it can not be less the lower limit or more the upper limit.
+- When adding preference the fruit drop down only shows the fruits that has not been added that particular user
+- Similary, when editing the **upper** and **lower** limit for users, it will give an error if total preferred limit is esceeded. 
+For example, if user **A** has:
+Min 2  and Maximum 5 apples, you can not edit the lower limit to 1. 
+
+
 
 
 
